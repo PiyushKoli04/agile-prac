@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DevOps Practical Guide: 12 Experiments</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#1b2430;--mute:#5a6675;--line:#d6dde5;--acc:#0b6b78;--codebg:#12202b;--codeink:#e3edf4;--warn:#fff4d6;--warnl:#d99a00;--warnink:#4a3600;--bad:#fde8e6;--badl:#c0392b;--badink:#5a1a14;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10171e;--card:#18222c;--ink:#e6edf3;--mute:#9aa8b6;--line:#2c3a47;--acc:#4fc3d0;--codebg:#0a1118;--codeink:#e3edf4;--warn:#3a2f10;--warnl:#e0a82a;--warnink:#f3e3b5;--bad:#3a1b18;--badl:#e5645a;--badink:#f7cfca}}
+:root[data-theme="dark"]{--bg:#10171e;--card:#18222c;--ink:#e6edf3;--mute:#9aa8b6;--line:#2c3a47;--acc:#4fc3d0;--codebg:#0a1118;--codeink:#e3edf4;--warn:#3a2f10;--warnl:#e0a82a;--warnink:#f3e3b5;--bad:#3a1b18;--badl:#e5645a;--badink:#f7cfca}
+html{scroll-padding-top:70px;height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{padding:36px 20px 12px;max-width:820px;margin:0 auto}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px;letter-spacing:-.01em}
+header p{margin:0;color:var(--mute);max-width:60ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 12px;display:flex;gap:6px;overflow-x:auto}
+nav a{flex:none;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--card);border-radius:6px;padding:4px 10px;font-size:.85rem}
+nav a:hover,nav a:focus-visible{border-color:var(--acc);color:var(--acc);outline:none}
+main{max-width:820px;margin:0 auto;padding:12px 20px 60px}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 22px 14px;margin:22px 0}
+h2{font-size:1.4rem;margin:0 0 4px;line-height:1.3}
+h2 span{color:var(--acc);margin-right:6px}
+.goal{color:var(--mute);margin:0 0 14px}
+h3{font-size:1.02rem;margin:20px 0 6px;color:var(--acc)}
+ol,ul{padding-left:22px;margin:6px 0}li{margin:4px 0}
+pre{position:relative;background:var(--codebg);color:var(--codeink);border-radius:8px;padding:12px 14px;overflow-x:auto;font:13.5px/1.5 Consolas,"Courier New",monospace;margin:8px 0}
+code{font-family:Consolas,"Courier New",monospace;font-size:.92em;background:color-mix(in srgb,var(--acc) 12%,transparent);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0;font-size:inherit}
+.cp{position:absolute;top:6px;right:6px;background:#ffffff1f;color:#e3edf4;border:0;border-radius:5px;padding:2px 8px;font-size:12px;cursor:pointer}
+.cp:focus-visible{outline:2px solid #fff}
+.rem,.err{border-left:4px solid var(--warnl);background:var(--warn);color:var(--warnink);padding:8px 12px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.95rem}
+.err{border-color:var(--badl);background:var(--bad);color:var(--badink)}
+.rem b,.err b{display:block}
+details summary{cursor:pointer;font-weight:600}
+details.theory{border-left:4px solid var(--acc);background:color-mix(in srgb,var(--acc) 8%,transparent);padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0 14px}
+details.theory p{margin:6px 0}details[open] summary{margin-bottom:6px}
+.shot{border:1px dashed var(--line);border-radius:8px;padding:8px 12px;margin:12px 0;font-size:.93rem;color:var(--mute)}
+.shot b{color:var(--ink)}
+td,th{border:1px solid var(--line);padding:5px 9px;text-align:left;font-size:.93rem}table{border-collapse:collapse;margin:8px 0;display:block;overflow-x:auto}
+footer{text-align:center;color:var(--mute);font-size:.85rem;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header>
+<h1>DevOps Practical Guide</h1>
+<p>All 12 experiments, step by step. Written for Windows with VS Code. Git work uses commands only; files are created in VS Code.</p>
+</header>
+<nav aria-label="Practicals">
+<a href="#start">Start here</a><a href="#p1">1</a><a href="#p2">2</a><a href="#p3">3</a><a href="#p4">4</a><a href="#p5">5</a><a href="#p6">6</a><a href="#p7">7</a><a href="#p8">8</a><a href="#p9">9</a><a href="#p10">10</a><a href="#p11">11</a><a href="#p12">12</a>
+</nav>
+<main>
+
+<section id="start">
+<h2>Start here: rules that prevent most problems</h2>
+<div class="rem"><b>Docker Desktop must be open and running</b>Practicals 6, 7, 8, 9 and 12 all need it. Open Docker Desktop first and wait for the green “Engine running” label. Then run <code>docker version</code>. You must see both a <b style="display:inline">Client</b> and a <b style="display:inline">Server</b> section. If Server is missing, the engine is not running yet.</div>
+<ul>
+<li><b>One folder per practical.</b> Create it in VS Code (File → Open Folder, or the New Folder icon), then open the terminal with <code>Ctrl + `</code>. Always check the terminal path shows the right folder before running commands.</li>
+<li><b>Save every file</b> with <code>Ctrl+S</code> before running a command. Unsaved files are the most common reason a result looks wrong.</li>
+<li><b>Run commands one at a time</b> and read the output. Do not paste a whole block blindly.</li>
+<li><b>File names matter.</b> <code>Dockerfile</code> has no extension. In VS Code, check that Windows did not save it as <code>Dockerfile.txt</code>.</li>
+<li><b>YAML files</b> (<code>.yml</code>) use spaces, never tabs. Indentation errors are the main YAML failure.</li>
+<li><b>Ports can clash.</b> Each practical below uses a different port so you can keep things running: Jenkins 8080, Docker page 8081, Compose 8082, Prometheus 9090, Grafana 3000.</li>
+<li><b>Take screenshots as you go.</b> Each practical lists what to capture. Include the terminal command and its output.</li>
+<li><b>Clean up</b> containers with the commands at the end of each practical, so the next one starts clean.</li>
+</ul>
+<h3>One-time Git setup (do this once)</h3>
+<pre><code>git --version
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"</code></pre>
+<div class="rem"><b>Software to install before the exam</b>Git, VS Code, Docker Desktop, Python 3, Google Chrome, Postman. Do this at home, not in the exam.</div>
+</section>
+
+<section id="p1">
+<h2><span>1.</span>Create a Jira task</h2>
+<p class="goal">Project StudentProject with one task, Complete Project Documentation, assigned to you.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Jira is a project management tool used by teams to plan and track work. A project groups related work, and each piece of work is an issue such as a task, bug or story. Assigning an issue to a person makes them responsible for it.</p><p><b>What we did:</b> We created a Kanban project named StudentProject, created a task called Complete Project Documentation, and assigned it to ourselves.</p><p><b>What we achieved:</b> We learned the basic Jira structure (site, project, issue) and how work is created and owned. This is the first step of the DevOps planning stage, where work is defined before anyone builds it.</p></details>
+<ol>
+<li>Go to <b>atlassian.com/software/jira</b> and click <b>Get it free</b>. Sign up and choose a site name, for example <code>yourname-devops</code>.</li>
+<li>Click <b>Projects → Create project</b>. Pick the <b>Kanban</b> template and <b>Team-managed</b>.</li>
+<li>Set <b>Name</b> to <code>StudentProject</code> and click <b>Create</b>.</li>
+<li>Click the blue <b>Create</b> button in the top bar. Set Project = StudentProject, Work type = <b>Task</b>, Summary = <code>Complete Project Documentation</code>.</li>
+<li>In <b>Assignee</b> choose <b>Assign to me</b>. Click <b>Create</b>.</li>
+<li>Open the card on the board and confirm your name shows as Assignee.</li>
+</ol>
+<div class="shot"><b>Screenshots:</b> the board with the project name; the open task showing title, assignee and status To Do.</div>
+<div class="rem"><b>Remember</b>The task is created inside the project, so check the Project field shows StudentProject, not another project.</div>
+</section>
+
+<section id="p2">
+<h2><span>2.</span>Track task progress in Jira</h2>
+<p class="goal">Task Testing Activity moved To Do → In Progress → Done.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Every Jira issue has a status that follows a workflow. A Kanban board shows this workflow as columns, usually To Do, In Progress and Done, so everyone sees the state of the work at a glance. Jira also records every change in the issue history.</p><p><b>What we did:</b> We created a task named Testing Activity and moved it from To Do to In Progress, then to Done, and viewed it afterwards.</p><p><b>What we achieved:</b> We tracked a task through its full life cycle and saw the history as proof. This shows how teams monitor progress and keep work visible and accountable.</p></details>
+<ol>
+<li>Open StudentProject. Click <b>Create</b>, Work type = Task, Summary = <code>Testing Activity</code>, then <b>Create</b>.</li>
+<li>Screenshot the card in <b>To Do</b>.</li>
+<li>Drag the card to <b>In Progress</b> (or open it and use the status dropdown). Screenshot.</li>
+<li>Drag it to <b>Done</b>. Screenshot.</li>
+<li>Display it: open the card and scroll to <b>Activity → History</b>. It lists To Do → In Progress → Done.</li>
+</ol>
+<div class="shot"><b>Screenshots:</b> three board states, plus the history view as proof of both transitions.</div>
+<div class="rem"><b>Remember</b>Take the screenshot after every move. You cannot recreate the In Progress state later without moving the task again. If the card vanishes from a Kanban board after Done, find it with <b>Filters → View all work items</b>.</div>
+</section>
+
+<section id="p3">
+<h2><span>3.</span>Git branch and merge</h2>
+<p class="goal">Repository, branch feature, student.txt committed, merged into main.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Git is a version control system that records the history of a project. A repository stores that history. A branch is an independent line of development, so new work can be done without touching the stable main branch. Merging combines the finished work back into main.</p><p><b>What we did:</b> We created a repository, made a first commit, created a branch named feature, added and committed student.txt there, then switched to main and merged feature into it.</p><p><b>What we achieved:</b> We learned the core Git workflow of init, add, commit, branch and merge. Branching lets teams work in parallel safely, which is the basis of source code management in DevOps.</p></details>
+<ol>
+<li>In VS Code create a folder <code>git-practical</code> and open it. Open the terminal.</li>
+<li>Create <code>readme.txt</code> in VS Code with any text and save it.</li>
+</ol>
+<pre><code>git init -b main
+git add readme.txt
+git commit -m "Initial commit"
+git checkout -b feature
+git branch</code></pre>
+<ol start="3">
+<li>In VS Code create <code>student.txt</code> containing your name and save it.</li>
+</ol>
+<pre><code>git add student.txt
+git commit -m "Add student.txt"
+git checkout main
+git merge feature
+git log --oneline
+git branch</code></pre>
+<div class="shot"><b>Screenshots:</b> <code>git branch</code> showing both branches; the merge output; <code>git log --oneline</code>; student.txt visible in the VS Code explorer while on main.</div>
+<div class="rem"><b>Remember</b>Commit <code>readme.txt</code> first, since a branch needs one commit to start from. Create student.txt <b>after</b> switching to feature, so the file belongs to that branch. If your branch is named <code>master</code>, run <code>git branch -M main</code>.</div>
+<details class="err"><summary>Troubleshooting: “Please tell me who you are”</summary>Run the one-time Git setup from the Start here section.</details>
+</section>
+
+<section id="p4">
+<h2><span>4.</span>Resolve a Git merge conflict</h2>
+<p class="goal">Change the same line in two branches, merge, and fix the conflict.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> A merge conflict happens when two branches change the same line of the same file differently. Git cannot decide which version is correct, so it stops and marks the file with conflict markers. A person must choose the final content.</p><p><b>What we did:</b> We changed line 1 of one file on both main and feature, committed both, merged, saw the conflict, edited the file to remove the markers, and committed the result.</p><p><b>What we achieved:</b> We created and resolved a conflict by hand. Conflicts are normal in team projects, so knowing how to read the markers and finish the merge is an essential Git skill.</p></details>
+<ol>
+<li>Create a new folder <code>conflict-practical</code> in VS Code and open it. Create <code>file.txt</code> with one line: <code>Hello from main</code>. Save.</li>
+</ol>
+<pre><code>git init -b main
+git add file.txt
+git commit -m "Initial commit"
+git checkout -b feature</code></pre>
+<ol start="2">
+<li>In VS Code change line 1 to <code>Hello from feature branch</code>. Save.</li>
+</ol>
+<pre><code>git add file.txt
+git commit -m "Change line in feature"
+git checkout main</code></pre>
+<ol start="3">
+<li>Now on main, change line 1 to <code>Hello from main updated</code>. Save.</li>
+</ol>
+<pre><code>git add file.txt
+git commit -m "Change line in main"
+git merge feature</code></pre>
+<p>Git prints <code>CONFLICT (content): Merge conflict in file.txt</code>. This is expected. Screenshot it.</p>
+<ol start="4">
+<li>Open <code>file.txt</code> in VS Code. It shows markers: <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature</code>. Screenshot this.</li>
+<li>Edit the file so only the final line you want remains, for example <code>Hello from main and feature combined</code>. <b>Delete all three marker lines.</b> Save.</li>
+</ol>
+<pre><code>git add file.txt
+git commit -m "Resolve merge conflict"
+git status
+git log --oneline --graph</code></pre>
+<div class="rem"><b>Remember</b>Both branches must change the <b>same line</b> and both changes must be <b>committed</b>, otherwise no conflict appears. Save the file in VS Code after every edit. Never leave marker lines in the file.</div>
+<details class="err"><summary>Troubleshooting: stuck in the middle of a merge</summary>Run <code>git merge --abort</code> to go back to before the merge and try again.</details>
+</section>
+
+<section id="p5">
+<h2><span>5.</span>Create a GitHub repository</h2>
+<p class="goal">Repository DevOpsPractical with README, plus a feature branch pushed to GitHub.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> GitHub is a web service that hosts Git repositories. The copy on your computer is the local repository, and the copy on GitHub is the remote, usually named origin. Pushing sends local commits to the remote, which allows backup, sharing and collaboration.</p><p><b>What we did:</b> We created the DevOpsPractical repository on GitHub, created a local repository with a README, connected the two with a remote, pushed main, then created a feature branch and pushed it too.</p><p><b>What we achieved:</b> Our code is now stored online and shared through a remote. This is the step that connects local work to the team and to later automation such as CI/CD pipelines.</p></details>
+<ol>
+<li>Sign in at <b>github.com</b>. Click <b>+ → New repository</b>. Name = <code>DevOpsPractical</code>, choose Public. <b>Leave “Add a README” unticked.</b> Click <b>Create repository</b>.</li>
+<li>In VS Code create a folder <code>DevOpsPractical</code> and open it. Create <code>README.md</code> containing <code># DevOpsPractical</code> and a line of text. Save.</li>
+</ol>
+<pre><code>git init -b main
+git add README.md
+git commit -m "Add README"
+git remote add origin https://github.com/YOUR-USERNAME/DevOpsPractical.git
+git push -u origin main</code></pre>
+<ol start="3">
+<li>Create the feature branch. Make a new file <code>student.txt</code> in VS Code and save it.</li>
+</ol>
+<pre><code>git checkout -b feature
+git add student.txt
+git commit -m "Add student.txt on feature branch"
+git push -u origin feature
+git branch -a
+git remote -v</code></pre>
+<ol start="4">
+<li>Refresh the GitHub page. Open the branch dropdown and confirm <b>main</b> and <b>feature</b> both exist.</li>
+</ol>
+<div class="rem"><b>Remember</b>Replace <code>YOUR-USERNAME</code> with your real GitHub username. Commit before the first push, or Git says the branch does not exist. The repository on GitHub must be empty, or the first push is rejected.</div>
+<details class="err"><summary>Troubleshooting: Authentication failed</summary>GitHub no longer accepts your account password in the terminal. Sign in through the browser popup, or create a Personal Access Token: GitHub → Settings → Developer settings → Personal access tokens (classic) → tick <b>repo</b>, and use it as the password.</details>
+<details class="err"><summary>Troubleshooting: “remote origin already exists”</summary>Run <code>git remote remove origin</code> and add it again.</details>
+</section>
+
+<section id="p6">
+<h2><span>6.</span>Execute a Jenkins pipeline</h2>
+<p class="goal">Console output prints Welcome to DevOps Practical and Build Successful.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Jenkins is an automation server used for continuous integration and continuous delivery (CI/CD). A pipeline is a list of stages, such as build, test and deploy, written as code in a Jenkinsfile style script. Each stage runs automatically and its output appears in the console log.</p><p><b>What we did:</b> We ran Jenkins in a Docker container, created a pipeline job, wrote a script with two stages that print messages, ran the build and read the console output.</p><p><b>What we achieved:</b> We ran our first automated pipeline and saw it finish with SUCCESS. The same structure is later used to build, test and deploy real applications automatically.</p></details>
+<div class="rem"><b>Before you start</b>Open Docker Desktop and wait for “Engine running”. Confirm with <code>docker version</code> that a Server section appears. The error <code>failed to connect to the docker API ... dockerDesktopLinuxEngine</code> means Docker Desktop is not running.</div>
+<ol><li>Start Jenkins (the first run downloads the image, so it takes a few minutes):</li></ol>
+<pre><code>docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts</code></pre>
+<ol start="2">
+<li>Wait 1 to 2 minutes. Open <b>http://localhost:8080</b>.</li>
+<li>Get the unlock password and paste it in the browser:</li>
+</ol>
+<pre><code>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword</code></pre>
+<ol start="4">
+<li>Choose <b>Install suggested plugins</b>, wait, create your admin user, then <b>Start using Jenkins</b>.</li>
+<li>Click <b>New Item</b>, name it <code>DevOpsPipeline</code>, choose <b>Pipeline</b>, click OK.</li>
+<li>Scroll to <b>Pipeline</b>, keep “Pipeline script”, and paste:</li>
+</ol>
+<pre><code>pipeline {
+    agent any
+    stages {
+        stage('Welcome') {
+            steps {
+                echo 'Welcome to DevOps Practical'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Build Successful'
+            }
+        }
+    }
+}</code></pre>
+<ol start="7"><li>Click <b>Save</b>, then <b>Build Now</b>. Click build <b>#1</b>, then <b>Console Output</b>.</li></ol>
+<div class="shot"><b>Screenshots:</b> the pipeline script; the green build #1; Console Output showing both messages and <code>Finished: SUCCESS</code>.</div>
+<div class="rem"><b>Remember</b>Jenkins needs a minute after starting, so a blank page just means wait and refresh. Write down your Jenkins username and password. If the container stops later, restart it with <code>docker start jenkins</code> (your pipeline is kept in the volume).</div>
+<details class="err"><summary>Troubleshooting: container name already in use, or port 8080 busy</summary>Name in use: run <code>docker rm -f jenkins</code> and run the start command again.<br>Port 8080 busy: use <code>-p 9090:8080</code> and open localhost:9090.</details>
+<details class="rem"><summary>Alternative if Docker will not work</summary>Install Java 17 or 21, download <code>jenkins.war</code> from jenkins.io, then run <code>java -jar jenkins.war --httpPort=8080</code>. The password is printed in the terminal.</details>
+</section>
+
+<section id="p7">
+<h2><span>7.</span>Build a Docker image</h2>
+<p class="goal">A simple page showing Welcome to Docker, built into an image and run in a container.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Docker packages an application and everything it needs into an image. A Dockerfile is the recipe for building that image. A container is a running instance of an image, isolated from the rest of the computer. Port mapping connects a port on your computer to a port in the container.</p><p><b>What we did:</b> We wrote an HTML page and a Dockerfile based on nginx, built an image with <code>docker build</code>, ran it with <code>docker run</code> and opened it in the browser.</p><p><b>What we achieved:</b> We turned a web page into a portable image that runs the same way on any machine with Docker. This solves the problem of an application working on one computer but not another.</p></details>
+<div class="rem"><b>Docker Desktop must be running</b>Check with <code>docker version</code> before you start.</div>
+<ol>
+<li>In VS Code create a folder <code>docker-practical</code> and open it.</li>
+<li>Create <code>index.html</code>:</li>
+</ol>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Docker&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;&lt;h1&gt;Welcome to Docker&lt;/h1&gt;&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ol start="3"><li>Create a file named exactly <code>Dockerfile</code> (no extension):</li></ol>
+<pre><code>FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html</code></pre>
+<ol start="4"><li>Build, run and verify. The dot at the end of the build command is required.</li></ol>
+<pre><code>docker build -t welcome-docker .
+docker images
+docker run -d --name welcome-container -p 8081:80 welcome-docker
+docker ps</code></pre>
+<ol start="5"><li>Open <b>http://localhost:8081</b>. You should see “Welcome to Docker”.</li></ol>
+<p>Clean up afterwards:</p>
+<pre><code>docker rm -f welcome-container</code></pre>
+<div class="shot"><b>Screenshots:</b> the build output; <code>docker images</code>; <code>docker ps</code>; the browser showing Welcome to Docker.</div>
+<div class="rem"><b>Remember</b>Run the commands from inside the folder that contains the Dockerfile. In <code>-p 8081:80</code> the left number is your computer, the right number is the container. Use 8081, not 8080, because Jenkins may be using 8080.</div>
+<details class="err"><summary>Troubleshooting: “failed to read dockerfile”</summary>The file is probably named <code>Dockerfile.txt</code>, or you are in the wrong folder.</details>
+</section>
+
+<section id="p8">
+<h2><span>8.</span>Run a Docker Compose application</h2>
+<p class="goal">Nginx web server started with Compose, with the page confirmed reachable.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Docker Compose describes one or more containers in a single YAML file, so the whole application starts with one command instead of long <code>docker run</code> commands. The file defines services, images, ports and volumes.</p><p><b>What we did:</b> We wrote a docker-compose.yml that runs the nginx image, maps a port, and mounts our HTML folder into the container. We started it with <code>docker compose up -d</code> and checked the page with the browser and curl.</p><p><b>What we achieved:</b> We ran a web server from a configuration file and verified it responds. This makes setups repeatable and easy to share, and it scales to applications with many containers.</p></details>
+<div class="rem"><b>Docker Desktop must be running.</b> Compose is included with it, so there is nothing else to install.</div>
+<ol>
+<li>Create a folder <code>compose-practical</code> and open it in VS Code.</li>
+<li>Create a subfolder <code>html</code>, and inside it a file <code>index.html</code> with <code>&lt;h1&gt;Hello from Docker Compose&lt;/h1&gt;</code>.</li>
+<li>Create <code>docker-compose.yml</code> in the main folder (indent with spaces):</li>
+</ol>
+<pre><code>services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8082:80"
+    volumes:
+      - ./html:/usr/share/nginx/html:ro</code></pre>
+<ol start="4"><li>Start and verify:</li></ol>
+<pre><code>docker compose up -d
+docker compose ps
+curl.exe -I http://localhost:8082</code></pre>
+<p>The curl output should include <code>HTTP/1.1 200 OK</code>. Also open <b>http://localhost:8082</b> in your browser.</p>
+<p>Stop it afterwards:</p>
+<pre><code>docker compose down</code></pre>
+<div class="shot"><b>Screenshots:</b> <code>docker compose up -d</code>; <code>docker compose ps</code> showing the service Up; the browser page.</div>
+<div class="rem"><b>Remember</b>In PowerShell write <code>curl.exe</code>, not <code>curl</code>, because plain <code>curl</code> is a different command there. Run <code>docker compose</code> commands in the folder that holds the compose file. The newer command is <code>docker compose</code> with a space, not <code>docker-compose</code>.</div>
+</section>
+
+<section id="p9">
+<h2><span>9.</span>Deploy an application in Kubernetes</h2>
+<p class="goal">Nginx deployment with three replicas, all three pods Running.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Kubernetes is a platform that runs and manages containers across a cluster. A pod is the smallest unit and holds one or more containers. A Deployment keeps a chosen number of identical pods (replicas) running and replaces any that fail. kubectl is the command line tool used to control it.</p><p><b>What we did:</b> We enabled Kubernetes, wrote a Deployment YAML for nginx with three replicas, applied it with <code>kubectl apply</code> and checked the pods with <code>kubectl get pods</code>.</p><p><b>What we achieved:</b> We deployed an application with three running copies. This shows how Kubernetes provides availability and scaling, which are the main reasons it is used for production systems.</p></details>
+<div class="rem"><b>Docker Desktop must be running</b>Kubernetes here is the one built into Docker Desktop.</div>
+<h3>Turn on Kubernetes</h3>
+<ol>
+<li>Docker Desktop → <b>Settings</b> (gear) → <b>Kubernetes</b> → tick <b>Enable Kubernetes</b> → <b>Apply &amp; restart</b>.</li>
+<li>Wait until the bottom of Docker Desktop shows Kubernetes running (several minutes the first time).</li>
+</ol>
+<pre><code>kubectl version --client
+kubectl get nodes</code></pre>
+<p>The node should show <code>Ready</code>. Only continue when it does.</p>
+<h3>Deploy</h3>
+<ol start="3"><li>Create folder <code>k8s-practical</code>, open it, and create <code>deployment.yaml</code>:</li></ol>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80</code></pre>
+<pre><code>kubectl apply -f deployment.yaml
+kubectl get deployments
+kubectl get pods</code></pre>
+<p>Wait until all three pods say <code>Running</code> and READY is <code>1/1</code>. Re-run <code>kubectl get pods</code> if some show ContainerCreating.</p>
+<pre><code>kubectl get pods -o wide
+kubectl delete -f deployment.yaml</code></pre>
+<p>The last command cleans up. Run it only after your screenshots.</p>
+<div class="shot"><b>Screenshots:</b> <code>kubectl get nodes</code>; <code>kubectl get deployments</code> showing 3/3; <code>kubectl get pods</code> with three Running pods.</div>
+<div class="rem"><b>Remember</b>Indentation in the YAML must be exact, with spaces only. Run <code>kubectl get nodes</code> before every deploy: a Ready node means you are connected. The first run needs internet to pull the nginx image. If <code>kubectl</code> is not found, close and reopen VS Code after Kubernetes finishes starting.</div>
+<details class="err"><summary>Troubleshooting: error “failed to download openapi ... Authentication required ... Hudson”</summary>This is not a YAML problem. With no cluster configured, kubectl defaults to <code>localhost:8080</code>, where your Jenkins container from Practical 6 answers with its login page. It means Kubernetes is not enabled or not selected. Do <b>not</b> use <code>--validate=false</code>, because it only hides the problem.<ol><li>Run <code>kubectl config get-contexts</code>. If there is no <code>docker-desktop</code> entry, open Docker Desktop, go to Settings, then Kubernetes, tick <b>Enable Kubernetes</b> and click <b>Apply &amp; restart</b>. Wait for the green Kubernetes status (3 to 10 minutes the first time).</li><li>If <code>docker-desktop</code> is listed but has no <code>*</code> beside it, run <code>kubectl config use-context docker-desktop</code>.</li><li>Close and reopen the VS Code terminal.</li><li>Run <code>kubectl config current-context</code> (should say <code>docker-desktop</code>) and <code>kubectl get nodes</code> (should show Ready).</li><li>Run <code>kubectl apply -f deployment.yaml</code> again.</li></ol></details>
+<details class="err"><summary>Troubleshooting: pods stuck in ErrImagePull</summary>Check your internet connection and run <code>kubectl get pods</code> again after a minute.</details>
+<details class="rem"><summary>Alternative if Docker Desktop Kubernetes will not start</summary>Install <b>minikube</b>, run <code>minikube start</code>, and use the same commands.</details>
+</section>
+
+<section id="p10">
+<h2><span>10.</span>API testing with Postman</h2>
+<p class="goal">GET request to jsonplaceholder, verify status 200, show the body.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> An API lets programs exchange data over HTTP. A GET request asks the server for data. The response has a status code, where 200 means success, and a body, here in JSON format. Postman is a tool for sending requests and writing tests against the responses.</p><p><b>What we did:</b> We sent a GET request to the JSONPlaceholder posts/1 endpoint, added a test that the status is 200, and viewed the JSON body.</p><p><b>What we achieved:</b> We tested an API without writing an application, and confirmed both the status code and the data. API testing like this catches backend problems early in the delivery pipeline.</p></details>
+<ol>
+<li>Install <b>Postman</b> from postman.com/downloads (or use Postman on the web). You can skip signing in if offered a “Lightweight API client”.</li>
+<li>Click <b>New → HTTP</b> (or the <b>+</b> tab). Keep the method as <b>GET</b>.</li>
+<li>Enter the URL:</li>
+</ol>
+<pre><code>https://jsonplaceholder.typicode.com/posts/1</code></pre>
+<ol start="4"><li>Click the <b>Scripts</b> tab, which sits after <b>Body</b> in the row under the URL bar (older versions call it <b>Tests</b>). Choose the <b>Post-response</b> sub-tab and add:</li></ol>
+<pre><code>pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});</code></pre>
+<ol start="5">
+<li>Click <b>Send</b>. The test runs only when you send the request, so send again if you added the script after your first send.</li>
+<li>Check the status at the top right of the response: <b>200 OK</b>. The <b>Test Results</b> tab shows the test passed.</li>
+<li>The <b>Body</b> section displays the response, which looks like <code>{ "userId": 1, "id": 1, "title": "...", "body": "..." }</code>.</li>
+</ol>
+<div class="shot"><b>Screenshots:</b> the request with URL and GET; the response body; status 200 OK; Test Results showing PASS.</div>
+<div class="rem"><b>Remember</b>The status code and the test result are separate things. Screenshot both. Use the <b>Pretty</b> view for the body. This needs an internet connection.</div>
+</section>
+
+<section id="p11">
+<h2><span>11.</span>Web testing with Selenium</h2>
+<p class="goal">Open Google, search for DevOps, print the page title.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Selenium is a tool for automating web browsers. A script can open pages, find elements such as a search box, type text, press keys and read results, just as a person would. This is used for automated functional testing of web applications.</p><p><b>What we did:</b> We wrote a Python script that opens Chrome, loads Google, finds the search box, types DevOps, submits it and prints the page title.</p><p><b>What we achieved:</b> We automated a manual browser task and read a result from the page. Tests like this can run inside a CI/CD pipeline to check that a website still works after every change.</p></details>
+<ol>
+<li>Install <b>Python 3</b> from python.org. During install tick <b>Add python.exe to PATH</b>. Install <b>Google Chrome</b> if missing.</li>
+<li>Create a folder <code>selenium-practical</code> in VS Code. In the terminal:</li>
+</ol>
+<pre><code>python --version
+pip install selenium</code></pre>
+<ol start="3"><li>Create <code>google_search.py</code>:</li></ol>
+<pre><code>from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+
+driver = webdriver.Chrome()
+driver.get("https://www.google.com")
+time.sleep(2)
+
+box = driver.find_element(By.NAME, "q")
+box.send_keys("DevOps")
+box.send_keys(Keys.RETURN)
+time.sleep(3)
+
+print("Page title:", driver.title)
+driver.quit()</code></pre>
+<ol start="4"><li>Run it:</li></ol>
+<pre><code>python google_search.py</code></pre>
+<p>Chrome opens, searches, and the terminal prints <code>Page title: DevOps - Google Search</code>.</p>
+<div class="shot"><b>Screenshots:</b> the script in VS Code; the terminal output with the page title; the Chrome window showing the results.</div>
+<div class="rem"><b>Remember</b>Name the file anything except <code>selenium.py</code>, which breaks the import. Selenium 4.6 or newer downloads the Chrome driver itself, so you do not need to install one. Keep your internet on and do not close the Chrome window while it runs.</div>
+<details class="err"><summary>Troubleshooting: Google shows a cookie popup or CAPTCHA, or pip is not found</summary>The search box may not be found. Click through the popup manually while the script waits, or increase the first <code>time.sleep(2)</code> to <code>time.sleep(10)</code>. If <code>pip</code> is not found, use <code>python -m pip install selenium</code>.</details>
+</section>
+
+<section id="p12">
+<h2><span>12.</span>Create a Grafana dashboard</h2>
+<p class="goal">A dashboard with one panel showing CPU or memory from a metrics source.</p>
+<details class="theory"><summary>Theory: what we did and achieved</summary><p><b>Concept:</b> Monitoring means collecting and viewing system metrics to understand health and performance. Node Exporter produces CPU and memory metrics, Prometheus collects and stores them, and Grafana connects to Prometheus as a data source and draws them as dashboards with panels.</p><p><b>What we did:</b> We started Grafana, Prometheus and Node Exporter with Docker Compose, added Prometheus as a data source in Grafana, and built a dashboard panel with a CPU or memory query.</p><p><b>What we achieved:</b> We built a live dashboard showing resource usage. This covers the monitoring stage of DevOps, where teams watch running systems and spot problems early.</p></details>
+<div class="rem"><b>Docker Desktop must be running.</b> This setup runs Grafana, Prometheus (stores metrics) and Node Exporter (produces CPU and memory numbers) together with Compose.</div>
+<ol>
+<li>Create a folder <code>grafana-practical</code> and open it in VS Code.</li>
+<li>Create <code>prometheus.yml</code>:</li>
+</ol>
+<pre><code>global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: node
+    static_configs:
+      - targets: ['node-exporter:9100']</code></pre>
+<ol start="3"><li>Create <code>docker-compose.yml</code>:</li></ol>
+<pre><code>services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  node-exporter:
+    image: prom/node-exporter
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"</code></pre>
+<pre><code>docker compose up -d
+docker compose ps</code></pre>
+<ol start="4">
+<li>Check Prometheus works: open <b>http://localhost:9090/targets</b>. The node target should show <b>UP</b>. Wait a minute if not.</li>
+<li>Open <b>http://localhost:3000</b>. Log in with <code>admin</code> / <code>admin</code> and skip or set a new password.</li>
+<li><b>Add the data source:</b> Connections → <b>Data sources → Add data source → Prometheus</b>. Set URL to <code>http://prometheus:9090</code>. Click <b>Save &amp; test</b> and confirm the green success message.</li>
+<li><b>Create the dashboard:</b> <b>Dashboards → New → New dashboard → Add visualization</b>. Pick the Prometheus data source.</li>
+<li>In the query box (switch to <b>Code</b> mode) enter a CPU query:</li>
+</ol>
+<pre><code>100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100)</code></pre>
+<p>For memory use this instead:</p>
+<pre><code>node_memory_MemAvailable_bytes</code></pre>
+<ol start="9">
+<li>Click <b>Run queries</b>, set the panel title (for example <code>CPU Usage</code>), then click <b>Save dashboard</b> and give it a name.</li>
+</ol>
+<p>Stop everything after the exam screenshots:</p>
+<pre><code>docker compose down</code></pre>
+<div class="shot"><b>Screenshots:</b> Prometheus targets showing UP; the data source “Save &amp; test” success; the finished dashboard with the panel showing a graph.</div>
+<div class="rem"><b>Remember</b>Inside Grafana the data source address is <code>http://prometheus:9090</code>, not <code>localhost</code>, because the containers talk to each other by service name. Wait 1 to 2 minutes after starting so the graph has data points, and set the time range (top right) to <b>Last 15 minutes</b>.</div>
+<details class="err"><summary>Troubleshooting: “No data” in the panel, or port 3000 or 9090 in use</summary>No data: check the targets page shows UP and the time range is recent.<br>Port in use: stop other containers with <code>docker ps</code> then <code>docker rm -f NAME</code>.</details>
+</section>
+
+<section>
+<h2>Final checklist before the exam</h2>
+<ul>
+<li>Docker Desktop opens and <code>docker version</code> shows Client and Server.</li>
+<li>Kubernetes is enabled in Docker Desktop settings and <code>kubectl get nodes</code> shows Ready.</li>
+<li>Git username and email are set. GitHub login or token works.</li>
+<li>Jira, Jenkins and Grafana logins are written down somewhere.</li>
+<li>Python, Selenium and Chrome work together. Postman is installed.</li>
+<li>Run <code>docker ps</code> to see what is running, and <code>docker rm -f NAME</code> to free ports you need.</li>
+</ul>
+</section>
+</main>
+<footer>Run each practical in its own folder. Take screenshots as you finish each step.</footer>
+<script>
+document.querySelectorAll('pre').forEach(function(p){
+  var b=document.createElement('button');b.className='cp';b.textContent='Copy';b.type='button';
+  b.onclick=function(){
+    var t=p.querySelector('code').innerText;
+    try{navigator.clipboard.writeText(t).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)},function(){b.textContent='Select text'})}catch(e){b.textContent='Select text'}
+  };
+  p.appendChild(b);
+});
+</script>
+</body>
+</html>
